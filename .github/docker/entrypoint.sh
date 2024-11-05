@@ -29,6 +29,12 @@ else
   ln -s /app/var/.env /app/
 fi
 
+## load .env file
+if [ -f /app/.env ]; then
+  echo "Loading environment variables from /app/.env"
+  export $(grep -v '^#' /app/.env | xargs)
+fi
+
 echo "Checking if https is required."
 if [ -f /etc/nginx/http.d/panel.conf ]; then
   echo "Using nginx config already in place."
