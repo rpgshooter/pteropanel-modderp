@@ -3,9 +3,10 @@
 namespace Pterodactyl\Http\Middleware;
 
 use Closure;
+use Ramsey\Uuid\Uuid;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Pterodactyl\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class HeaderAuthentication
@@ -29,14 +30,21 @@ class HeaderAuthentication
         $user = User::where('email', $email)->first();
 
         if (!$user && config('auth.header.auto_create', false)) {
-            $user = User::create([
-                'username' => $username,
-                'email' => $email,
-                'name_first' => $username,
-                'name_last' => '',
-                'password' => bcrypt(str_random(32)),
-                'root_admin' => false,
-            ]);
+            $user = new User();
+            $user->uuid = Uuid::uuid4()->toString();
+            $user->username = $username;
+            $user->email = $email;
+            $user->name_first = $username;
+            $user->name_last = $username;
+            $user->password = bcrypt(Uuid::uuid4()->toString());
+            $user->language = config('app.locale', 'en');
+            $user->root_admin = false;
+            $user->use_totp = false;
+            $user->totp_secret = null;
+            $user->external_id = '';
+            $user->gravatar = true;
+            $user->totp_authenticated_at = null;
+            $user->save();
         }
 
         if ($user) {
