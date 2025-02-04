@@ -27,7 +27,7 @@ class SubuserController extends ClientApiController
     public function __construct(
         private SubuserRepository $repository,
         private SubuserCreationService $creationService,
-        private DaemonServerRepository $serverRepository,
+        private DaemonServerRepository $serverRepository
     ) {
         parent::__construct();
     }
@@ -151,6 +151,8 @@ class SubuserController extends ClientApiController
 
             try {
                 $this->serverRepository->setServer($server)->revokeUserJTI($subuser->user_id);
+                $sftpUsername = $subuser->user->username . '.' . $server->uuidShort;
+                $this->serverRepository->setServer($server)->disconnectSFTP($sftpUsername);
             } catch (DaemonConnectionException $exception) {
                 // Don't block this request if we can't connect to the Wings instance.
                 Log::warning($exception, ['user_id' => $subuser->user_id, 'server_id' => $server->id]);
