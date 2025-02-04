@@ -109,13 +109,17 @@ class SubuserController extends ClientApiController
         // Only update the database and hit up the Wings instance to invalidate JTI's if the permissions
         // have actually changed for the user.
         if ($permissions !== $current) {
-            $log->transaction(function ($instance) use ($request, $subuser, $server) {
+            $log->transaction(function ($instance) use ($request, $subuser, $server, $permissions, $current) {
                 $this->repository->update($subuser->id, [
                     'permissions' => $this->getDefaultPermissions($request),
                 ]);
 
                 try {
                     $this->serverRepository->setServer($server)->revokeUserJTI($subuser->user_id);
+                    if (in_array(Permission::ACTION_FILE_SFTP, $current) && !in_array(Permission::ACTION_FILE_SFTP, $permissions)) {
+                        $sftpUsername = $subuser->user->username . '.' . $server->uuidShort;
+                        $this->serverRepository->setServer($server)->disconnectSFTP($sftpUsername);
+                    }
                 } catch (DaemonConnectionException $exception) {
                     // Don't block this request if we can't connect to the Wings instance. Chances are it is
                     // offline and the token will be invalid once Wings boots back.
