@@ -164,11 +164,12 @@ class DaemonServerRepository extends DaemonRepository
     public function disconnectSFTP(string $username): void
     {
         Assert::isInstanceOf($this->server, Server::class);
+        $sftpUsername = $username . '.' . $this->server->uuidShort;
 
         try {
             $this->getHttpClient()
                 ->delete(sprintf('/api/servers/%s/sftp/disconnect', $this->server->uuid), [
-                    'json' => ['username' => $username],
+                    'json' => ['username' => $sftpUsername],
                 ]);
         } catch (TransferException $exception) {
             throw new DaemonConnectionException($exception);

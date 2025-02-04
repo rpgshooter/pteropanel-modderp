@@ -117,8 +117,7 @@ class SubuserController extends ClientApiController
                 try {
                     $this->serverRepository->setServer($server)->revokeUserJTI($subuser->user_id);
                     if (in_array(Permission::ACTION_FILE_SFTP, $current) && !in_array(Permission::ACTION_FILE_SFTP, $permissions)) {
-                        $sftpUsername = $subuser->user->username . '.' . $server->uuidShort;
-                        $this->serverRepository->setServer($server)->disconnectSFTP($sftpUsername);
+                        $this->serverRepository->setServer($server)->disconnectSFTP($subuser->user->username);
                     }
                 } catch (DaemonConnectionException $exception) {
                     // Don't block this request if we can't connect to the Wings instance. Chances are it is
@@ -155,8 +154,7 @@ class SubuserController extends ClientApiController
 
             try {
                 $this->serverRepository->setServer($server)->revokeUserJTI($subuser->user_id);
-                $sftpUsername = $subuser->user->username . '.' . $server->uuidShort;
-                $this->serverRepository->setServer($server)->disconnectSFTP($sftpUsername);
+                $this->serverRepository->setServer($server)->disconnectSFTP($subuser->user->username);
             } catch (DaemonConnectionException $exception) {
                 // Don't block this request if we can't connect to the Wings instance.
                 Log::warning($exception, ['user_id' => $subuser->user_id, 'server_id' => $server->id]);
