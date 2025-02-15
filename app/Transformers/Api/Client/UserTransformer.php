@@ -36,6 +36,7 @@ class UserTransformer extends BaseClientTransformer
             'last_name' => $model->name_last,
             'language' => $model->language,
             'created_at' => $this->formatTimestamp($user->created_at),
-            'updated_at' => $this->formatTimestamp($user->updated_at),        ];
+            'updated_at' => $this->formatTimestamp($user->updated_at),
+        ];
     }
 }
