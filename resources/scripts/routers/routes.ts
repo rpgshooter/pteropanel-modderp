@@ -61,6 +61,11 @@ export default {
             component: AccountSSHContainer,
         },
         {
+            path: '/billing',
+            name: 'Billing',
+            component: lazy(() => import('@/components/dashboard/billing/BillingContainer')),
+        },
+        {
             path: '/activity',
             name: 'Activity',
             component: ActivityLogContainer,
