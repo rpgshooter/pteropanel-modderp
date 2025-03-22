@@ -80,6 +80,14 @@
                         </div>
                         <p class="small text-muted no-margin">If the selected Egg has an install script attached to it, the script will run during install. If you would like to skip this step, check this box.</p>
                     </div>
+                    <div class="form-group col-xs-12">
+                        <label for="pEnvironment">Environment</label>
+                        <select name="environment" id="pEnvironment" class="form-control">
+                            <option value="production" @if($server->environment === 'production') selected @endif>Production</option>
+                            <option value="development" @if($server->environment === 'development') selected @endif>Development</option>
+                        </select>
+                        <p class="small text-muted no-margin">Select the environment for this server.</p>
+                    </div>
                 </div>
             </div>
             <div class="box">

@@ -16,6 +16,7 @@ class ServerFormRequest extends AdminFormRequest
         $rules = Server::getRules();
         $rules['description'][] = 'nullable';
         $rules['custom_image'] = 'sometimes|nullable|string';
+        $rules['environment'] = 'required|string|in:production,development';
 
         return $rules;
     }

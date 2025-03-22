@@ -30,6 +30,7 @@ class ServerController extends Controller
             ->allowedFilters([
                 AllowedFilter::exact('owner_id'),
                 AllowedFilter::custom('*', new AdminServerFilter()),
+                AllowedFilter::exact('environment'), // P8414
             ])
             ->paginate(config()->get('pterodactyl.paginate.admin.servers'));
 

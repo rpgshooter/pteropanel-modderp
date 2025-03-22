@@ -176,4 +176,14 @@ class ServerRepository extends EloquentRepository implements ServerRepositoryInt
             ->where('node_id', '=', $node)
             ->paginate($limit);
     }
+
+    /**
+     * Filter servers by environment.
+     */
+    public function filterByEnvironment(string $environment): Collection
+    {
+        return $this->getBuilder()
+            ->where('environment', '=', $environment)
+            ->get($this->getColumns());
+    }
 }
